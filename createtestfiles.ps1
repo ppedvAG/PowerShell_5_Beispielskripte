@@ -10,6 +10,7 @@ Param(
 
 for($i = 0;$i -le $Directorycount;$i++)
 {
+    Write-Progress -Activity "Erstelle Testordner" -Status "Generiere Verzeichnis \Dir$("{0:D3}" -f $i)\" -PercentComplete ((100/$Directorycount)*$i)
     $Path = $TargetPath + "\Dir$("{0:D3}" -f $i)\"
     If(!(Test-Path -Path $Path))
     {
@@ -17,7 +18,12 @@ for($i = 0;$i -le $Directorycount;$i++)
     }
     for($x = 0; $x -le $Filecount;$x++)
     {
-        Get-Process | Out-File -FilePath ($Path + "File" + ("{0:D3}" -f $x) + ".txt")
+        Write-Progress -Activity "Erstelle Tesdateien" -Status "Generiere Datei $("File$("{0:D3}" -f $x).txt in Ordner $("\Dir$("{0:D3}" -f $i)")")" -PercentComplete ((100/$Filecount)*$x) 
+        if(Test-Path -Path ($Path + "File" + ("{0:D3}" -f $x) + ".txt")
+        {
+            Write-Verbose -Message "Datei schon existent wird überschrieben"
+        }
+        Get-Process | Out-File -FilePath ($Path + "File" + ("{0:D3}" -f $x) + ".txt") -Force
     }
 }
 
